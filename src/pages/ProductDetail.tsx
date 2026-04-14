@@ -4,23 +4,50 @@ import { motion } from "motion/react";
 import { Star, ShoppingCart, Heart, ChevronRight, ShieldCheck, Truck, RefreshCcw, Store, Info, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { products, Product } from "@/data/products";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function ProductDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [product, setProduct] = useState<Product | null>(null);
+  const [product, setProduct] = useState<any | null>(null);
+  const [allProducts, setAllProducts] = useState<any[]>([]);
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
-    const foundProduct = products.find((p) => p.id === id);
-    if (foundProduct) {
-      setProduct(foundProduct);
-    } else {
-      navigate("/");
+    const fetchAllProducts = async () => {
+      try {
+        const res = await fetch("/api/products");
+        if (res.ok) {
+          const data = await res.json();
+          setAllProducts(data.products);
+        }
+      } catch (error) {
+        console.error("Error fetching all products", error);
+      }
+    };
+    fetchAllProducts();
+  }, []);
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const res = await fetch(`/api/products/${id}`);
+        if (res.ok) {
+          const data = await res.json();
+          setProduct(data.product);
+        } else {
+          navigate("/shop");
+        }
+      } catch (error) {
+        console.error("Error fetching product", error);
+        navigate("/shop");
+      }
+    };
+
+    if (id) {
+      fetchProduct();
     }
     window.scrollTo(0, 0);
   }, [id, navigate]);
@@ -35,7 +62,7 @@ export default function ProductDetail() {
     navigate(`/checkout/${product.id}`);
   };
 
-  const relatedProducts = products.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 4);
+  const relatedProducts = allProducts.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 4);
 
   return (
     <div className="min-h-screen bg-[#fdfcfb] pt-24 pb-24">
@@ -60,7 +87,7 @@ export default function ProductDetail() {
               <img 
                 src={product.images[selectedImage]} 
                 alt={product.name} 
-                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                className="w-full h-full object-cover transition-transform duration-1000 lg:group-hover:scale-105"
                 referrerPolicy="no-referrer"
               />
               <div className="absolute top-8 right-8 flex flex-col gap-4">

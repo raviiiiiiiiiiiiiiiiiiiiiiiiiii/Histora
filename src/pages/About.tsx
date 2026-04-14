@@ -95,18 +95,14 @@ export default function About() {
           <p className="text-xl text-muted-foreground mb-12 leading-relaxed">
             Whether you're an artisan looking to share your craft or a collector seeking authentic beauty, there's a place for you at Hastoria.
           </p>
-          <div className="flex flex-col sm:flex-row gap-6 justify-center">
-            <Link to="/shop">
-              <Button size="lg" className="olive-button h-16 px-10 text-xl shadow-xl w-full sm:w-auto">
-                Shop Collection
-                <ArrowRight className="ml-2" />
-              </Button>
-            </Link>
-            <Link to="/sell">
-              <Button size="lg" variant="outline" className="rounded-full h-16 px-10 text-xl border-primary/20 hover:bg-primary/5 w-full sm:w-auto">
-                Become a Seller
-              </Button>
-            </Link>
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
+            <Button render={<Link to="/shop" />} size="lg" className="olive-button h-16 px-10 text-xl shadow-xl w-full sm:w-auto">
+              Shop Collection
+              <ArrowRight className="ml-2" />
+            </Button>
+            <Button render={<Link to="/sell" />} size="lg" variant="outline" className="rounded-full h-16 px-10 text-xl border-primary/20 hover:bg-primary/5 w-full sm:w-auto">
+              Become a Seller
+            </Button>
           </div>
         </div>
       </section>

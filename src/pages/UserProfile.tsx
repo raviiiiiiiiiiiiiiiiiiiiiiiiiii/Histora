@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ShoppingBag, Package, MapPin, CreditCard, Edit2, Save, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function UserProfile() {
   const { user, profile, updateProfile } = useAuth();
@@ -186,7 +186,7 @@ export default function UserProfile() {
                 <Package size={48} className="mx-auto text-muted-foreground/30 mb-4" />
                 <h3 className="text-2xl font-heading font-bold mb-2">No orders yet</h3>
                 <p className="text-muted-foreground mb-8">You haven't made any purchases yet. Explore our collection!</p>
-                <button className="olive-button">Start Shopping</button>
+                <Button render={<Link to="/shop" />} className="olive-button">Start Shopping</Button>
               </div>
             )}
           </div>

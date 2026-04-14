@@ -27,7 +27,7 @@ CREATE TABLE products (
     images TEXT[], -- Array of image URLs
     stock_quantity INTEGER DEFAULT 0,
     rating DECIMAL(2, 1) DEFAULT 0.0,
-    review_count INTEGER DEFAULT 0,
+    reviews INTEGER DEFAULT 0,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -37,8 +37,10 @@ CREATE TABLE orders (
     customer_id UUID REFERENCES users(id),
     vendor_id UUID REFERENCES users(id),
     product_id UUID REFERENCES products(id),
+    product_name VARCHAR(255),
+    product_image TEXT,
     quantity INTEGER NOT NULL,
-    total_amount DECIMAL(10, 2) NOT NULL,
+    total DECIMAL(10, 2) NOT NULL,
     payment_method VARCHAR(50), -- 'COD', 'Card', etc.
     status VARCHAR(50) DEFAULT 'pending', -- 'pending', 'shipped', 'delivered', 'cancelled'
     shipping_progress INTEGER DEFAULT 0,

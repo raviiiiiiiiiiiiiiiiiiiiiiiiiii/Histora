@@ -1,14 +1,33 @@
+import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { ShoppingCart, Heart, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate, Link } from "react-router-dom";
-import { products } from "@/data/products";
 
 export default function ProductGrid() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch("/api/products");
+        if (res.ok) {
+          const data = await res.json();
+          setProducts(data.products);
+        }
+      } catch (error) {
+        console.error("Error fetching products", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
 
   const handleBuy = (product: any) => {
     if (!user) {
@@ -17,6 +36,8 @@ export default function ProductGrid() {
     }
     navigate(`/checkout/${product.id}`);
   };
+
+  if (loading) return null;
 
   return (
     <section className="py-24 bg-white">
@@ -46,7 +67,7 @@ export default function ProductGrid() {
                   <img 
                     src={product.images[0]} 
                     alt={product.name} 
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    className="w-full h-full object-cover transition-transform duration-700 lg:group-hover:scale-110"
                     referrerPolicy="no-referrer"
                   />
                 </Link>
@@ -76,7 +97,7 @@ export default function ProductGrid() {
                   <p className="text-xl font-bold text-primary">₹{product.price}</p>
                 </div>
                 <div className="flex items-center justify-between pt-2">
-                  <p className="text-sm text-muted-foreground">by <span className="font-medium text-foreground">{product.artisan}</span></p>
+                  <p className="text-sm text-muted-foreground">by <span className="font-medium text-foreground">{product.artisan_name || product.artisan}</span></p>
                   <div className="flex items-center gap-1">
                     <Star size={14} className="fill-primary text-primary" />
                     <span className="text-sm font-bold">{product.rating}</span>

@@ -41,7 +41,7 @@ async function startServer() {
         RETURNING id, email, display_name, role
       `;
       
-      const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: "7d" });
+      const token = jwt.sign({ id: user.id, display_name: user.display_name }, JWT_SECRET, { expiresIn: "7d" });
       res.json({ user, token });
     } catch (error: any) {
       res.status(400).json({ error: error.message });
@@ -58,7 +58,7 @@ async function startServer() {
         return res.status(401).json({ error: "Invalid credentials" });
       }
       
-      const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: "7d" });
+      const token = jwt.sign({ id: user.id, display_name: user.display_name }, JWT_SECRET, { expiresIn: "7d" });
       const { password: _, ...userWithoutPassword } = user;
       res.json({ user: userWithoutPassword, token });
     } catch (error: any) {
@@ -113,7 +113,7 @@ async function startServer() {
       query += ` WHERE id = $${filteredKeys.length + 1} RETURNING id, email, display_name, role, photo_url, shipping_address, shop_name, artisan_type, shop_description, vendor_status`;
       values.push(decoded.id);
 
-      const [updatedUser] = await (sql as any)(query, values);
+      const [updatedUser] = await (sql as any).query(query, values);
       res.json({ user: updatedUser });
     } catch (error: any) {
       res.status(400).json({ error: error.message });
@@ -128,23 +128,46 @@ async function startServer() {
       }
       // Try to fetch products, handle case where table or column might not exist yet
       try {
+        console.log("Fetching products from DB...");
         let products = await sql`SELECT * FROM products`;
+        console.log(`Found ${products.length} products in DB`);
+        
         if (products.length === 0 && mockProducts.length > 0) {
+          console.log("DB is empty, seeding with mock products...");
           // Seed if empty
           for (const p of mockProducts) {
-            await sql`
-              INSERT INTO products (name, price, category, description, images, artisan_name, rating, reviews)
-              VALUES (${p.name}, ${p.price}, ${p.category}, ${p.description}, ${p.images}, ${p.artisan}, ${p.rating}, ${p.reviews})
-            `;
+            try {
+              await sql`
+                INSERT INTO products (name, price, category, description, images, artisan_name, rating, reviews)
+                VALUES (${p.name}, ${p.price}, ${p.category}, ${p.description}, ${p.images}, ${p.artisan}, ${p.rating}, ${p.reviews})
+              `;
+            } catch (seedErr) {
+              console.error(`Failed to seed product ${p.name}:`, seedErr);
+            }
           }
           products = await sql`SELECT * FROM products`;
+          console.log(`Seeding complete. Now have ${products.length} products.`);
         }
         res.json({ products });
       } catch (e) {
-        console.error("DB Products fetch error, returning empty", e);
+        console.error("DB Products fetch error:", e);
         res.json({ products: [] });
       }
     } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.get("/api/products/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const [product] = await sql`SELECT * FROM products WHERE id = ${id}`;
+      if (!product) {
+        return res.status(404).json({ error: "Product not found" });
+      }
+      res.json({ product });
+    } catch (error: any) {
+      console.error("Product fetch error:", error);
       res.status(500).json({ error: error.message });
     }
   });
@@ -210,7 +233,7 @@ async function startServer() {
       
       const [product] = await sql`
         INSERT INTO products (name, price, category, description, images, vendor_id, artisan_name)
-        VALUES (${name}, ${price}, ${category}, ${description}, ${[image]}, ${decoded.id}, ${decoded.displayName})
+        VALUES (${name}, ${price}, ${category}, ${description}, ${[image]}, ${decoded.id}, ${decoded.display_name})
         RETURNING *
       `;
       res.json({ product });
