@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { Search, Filter, SlidersHorizontal, ChevronRight, Star } from "lucide-react";
-import { Input } from "@/components/ui/Input";
-import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 
 export default function Shop() {
