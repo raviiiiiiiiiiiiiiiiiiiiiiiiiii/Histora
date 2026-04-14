@@ -1,0 +1,102 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: users
+    // Fields: uid, email, displayName, photoURL, role (customer/vendor), createdAt
+    //
+    // Collection: products
+    // Fields: id, name, description, price, category, vendorId, artisanName, images, createdAt
+    //
+    // Collection: orders
+    // Fields: id, customerId, vendorId, productId, quantity, total, status, shippingProgress, createdAt
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && 
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+         (request.auth.token.email == "ravi2009u@gmail.com" && request.auth.token.email_verified == true));
+    }
+
+    function isVendor() {
+      return isAuthenticated() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'vendor';
+    }
+
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
+    }
+
+    function isValidEmail(email) {
+      return email is string && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+
+    // ===============================================================
+    // Domain Validators
+    // ===============================================================
+
+    function isValidUser(data) {
+      return data.uid is string && 
+             data.email is string && isValidEmail(data.email) &&
+             data.role in ['customer', 'vendor', 'admin'];
+    }
+
+    function isValidProduct(data) {
+      return data.name is string && data.name.size() > 0 && data.name.size() < 100 &&
+             data.price is number && data.price > 0 &&
+             data.vendorId == request.auth.uid &&
+             data.category is string;
+    }
+
+    function isValidOrder(data) {
+      return data.customerId == request.auth.uid &&
+             data.vendorId is string &&
+             data.productId is string &&
+             data.total is number && data.total > 0 &&
+             data.status in ['pending', 'shipped', 'delivered', 'cancelled'];
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow create: if isAuthenticated() && isValidUser(request.resource.data) && (isOwner(userId) || isAdmin());
+      allow update: if isAuthenticated() && isValidUser(request.resource.data) && (isOwner(userId) || isAdmin()) && 
+                    (request.resource.data.role == resource.data.role || isAdmin());
+    }
+
+    match /products/{productId} {
+      allow read: if true;
+      allow create: if isVendor() && isValidProduct(request.resource.data);
+      allow update: if isVendor() && resource.data.vendorId == request.auth.uid && isValidProduct(request.resource.data);
+      allow delete: if (isVendor() && resource.data.vendorId == request.auth.uid) || isAdmin();
+    }
+
+    match /orders/{orderId} {
+      allow read: if isAuthenticated() && (request.auth.uid == resource.data.customerId || request.auth.uid == resource.data.vendorId || isAdmin());
+      allow create: if isAuthenticated() && isValidOrder(request.resource.data);
+      allow update: if isAuthenticated() && (
+        (request.auth.uid == resource.data.vendorId && hasOnlyAllowedFields(resource.data.keys().concat(['status', 'shippingProgress']))) ||
+        isAdmin()
+      );
+    }
+  }
+}
