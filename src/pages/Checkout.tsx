@@ -5,23 +5,34 @@ import { ShoppingCart, MapPin, CreditCard, ChevronRight, Truck, ShieldCheck, Ale
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { products, Product } from "@/data/products";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function Checkout() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user, profile, updateProfile } = useAuth();
-  const [product, setProduct] = useState<Product | null>(null);
-  const [address, setAddress] = useState(profile?.shipping_address || profile?.shippingAddress || "");
+  const [product, setProduct] = useState<any | null>(null);
+  const [address, setAddress] = useState(profile?.shipping_address || "");
   const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
-    const foundProduct = products.find((p) => p.id === id);
-    if (foundProduct) {
-      setProduct(foundProduct);
-    } else {
-      navigate("/");
+    const fetchProduct = async () => {
+      try {
+        const res = await fetch(`/api/products/${id}`);
+        if (res.ok) {
+          const data = await res.json();
+          setProduct(data.product);
+        } else {
+          navigate("/shop");
+        }
+      } catch (error) {
+        console.error("Error fetching product", error);
+        navigate("/shop");
+      }
+    };
+
+    if (id) {
+      fetchProduct();
     }
   }, [id, navigate]);
 
