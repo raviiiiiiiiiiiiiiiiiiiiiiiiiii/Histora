@@ -158,4 +158,35 @@ export default function Checkout() {
                     <span>₹{product.price}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Ship
+                    <span className="text-muted-foreground">Shipping</span>
+                    <span className="text-green-600 font-bold">FREE</span>
+                  </div>
+                  <div className="flex justify-between text-lg font-bold pt-3 border-t">
+                    <span>Total</span>
+                    <span className="text-primary">₹{product.price}</span>
+                  </div>
+                </div>
+                <Button
+                  onClick={handlePlaceOrder}
+                  disabled={isProcessing}
+                  className="olive-button w-full h-14 text-lg shadow-lg"
+                >
+                  {isProcessing ? "Processing..." : "Place Order (COD)"}
+                </Button>
+                <div className="flex flex-col gap-3 pt-4">
+                  <div className="flex items-center gap-2 text-[10px] text-muted-foreground uppercase font-bold tracking-widest">
+                    <ShieldCheck size={14} className="text-green-600" />
+                    Secure Checkout
+                  </div>
+                  <p className="text-[10px] text-muted-foreground leading-tight">
+                    By placing your order, you agree to Hastoria's terms of use and privacy policy.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
