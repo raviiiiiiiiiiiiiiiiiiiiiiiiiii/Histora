@@ -97,4 +97,46 @@ export default function Navbar() {
             <SheetContent side="right" className="w-full sm:w-[400px] p-0 border-none">
               <div className="flex flex-col h-full bg-[#fdfcfb]">
                 <div className="p-6 border-b border-border/50 flex justify-between items-center">
-                  <Link to="/" className="text-2xl font-heading font-bold trac
+                                    <Link to="/" className="text-2xl font-heading font-bold tracking-tight">Hastoria</Link>
+                </div>
+                <div className="flex-1 px-6 py-8 space-y-6">
+                  <Link to="/shop" className="block text-3xl font-heading font-bold hover:text-primary transition-colors">Shop Handmade</Link>
+                  <Link to="/sell" className="block text-3xl font-heading font-bold hover:text-primary transition-colors">Sell on Hastoria</Link>
+                  <Link to="/about" className="block text-3xl font-heading font-bold hover:text-primary transition-colors">Our Story</Link>
+                  <Link to="/faq" className="block text-3xl font-heading font-bold hover:text-primary transition-colors">FAQs</Link>
+                  <Link to="/contact" className="block text-3xl font-heading font-bold hover:text-primary transition-colors">Contact</Link>
+                  {user && (
+                    <div className="pt-6 border-t border-border/50 space-y-6">
+                      <Link to="/profile" className="block text-2xl font-heading font-bold text-muted-foreground hover:text-primary transition-colors">My Profile</Link>
+                      {isVendor && <Link to="/dashboard" className="block text-2xl font-heading font-bold text-muted-foreground hover:text-primary transition-colors">Vendor Dashboard</Link>}
+                    </div>
+                  )}
+                </div>
+                <div className="p-6 border-t border-border/50">
+                  {user ? (
+                    <Button onClick={() => logout()} variant="outline" className="w-full h-14 rounded-full text-lg font-bold border-primary/20">Logout</Button>
+                  ) : (
+                    <Button onClick={() => navigate("/auth")} className="olive-button w-full h-14 text-lg shadow-lg">Login / Register</Button>
+                  )}
+                </div>
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
+      </div>
+      {isSearchOpen && (
+        <div className="md:hidden p-4 border-t border-border/50 animate-in slide-in-from-top duration-300">
+          <div className="relative">
+            <Input
+              placeholder="Search handmade treasures..."
+              className="pl-10 rounded-full bg-secondary/50 border-none"
+              autoFocus
+            />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
+          </div>
+        </div>
+      )}
+    </nav>
+  );
+}
+
