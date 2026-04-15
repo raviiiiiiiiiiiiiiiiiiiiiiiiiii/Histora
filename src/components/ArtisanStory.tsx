@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
 export default function ArtisanStory() {
