@@ -6,9 +6,10 @@ export const Avatar = ({ children, className = '' }: { children: React.ReactNode
   </div>
 );
 
-export const AvatarImage = ({ src, alt = '', className = '' }: { src?: string; alt?: string; className?: string }) => (
-  <img src={src} alt={alt} className={`aspect-square h-full w-full ${className}`} referrerPolicy="no-referrer" />
-);
+export const AvatarImage = ({ src, alt = '', className = '' }: { src?: string; alt?: string; className?: string }) => {
+  if (!src) return null;
+  return <img src={src} alt={alt} className={`aspect-square h-full w-full ${className}`} referrerPolicy="no-referrer" />;
+};
 
 export const AvatarFallback = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
   <div className={`flex h-full w-full items-center justify-center rounded-full bg-muted ${className}`}>
