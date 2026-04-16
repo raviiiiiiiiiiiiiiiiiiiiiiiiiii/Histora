@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/Button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import { Input } from "@/components/ui/Input";
+import { Label } from "@/components/ui/Label";
 import { Store, LogIn, LogOut, UserPlus, Mail, Lock, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -79,6 +79,7 @@ export default function AuthPage() {
               {error}
             </div>
           )}
+          
           <form onSubmit={handleSubmit} className="space-y-4">
             {!isLogin && (
               <div className="space-y-2">
@@ -95,6 +96,7 @@ export default function AuthPage() {
                 </div>
               </div>
             )}
+            
             <div className="space-y-2">
               <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Email Address</Label>
               <div className="relative">
@@ -109,6 +111,7 @@ export default function AuthPage() {
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
               </div>
             </div>
+
             <div className="space-y-2">
               <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Password</Label>
               <div className="relative">
@@ -123,6 +126,7 @@ export default function AuthPage() {
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
               </div>
             </div>
+
             <Button 
               type="submit" 
               disabled={isSubmitting}
@@ -131,6 +135,7 @@ export default function AuthPage() {
               {isSubmitting ? "Processing..." : (isLogin ? "Sign In" : "Create Account")}
             </Button>
           </form>
+          
           <div className="text-center space-y-4 pt-4">
             <p className="text-sm text-muted-foreground">
               {isLogin ? "Don't have an account?" : "Already have an account?"}

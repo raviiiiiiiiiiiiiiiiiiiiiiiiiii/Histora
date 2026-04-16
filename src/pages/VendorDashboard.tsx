@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/Button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import { Input } from "@/components/ui/Input";
+import { Label } from "@/components/ui/Label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs";
+import { Badge } from "@/components/ui/Badge";
 import { Package, Plus, ShoppingBag, LayoutDashboard, Settings, Store } from "lucide-react";
 
 export default function VendorDashboard() {
@@ -16,7 +16,11 @@ export default function VendorDashboard() {
   const [orders, setOrders] = useState<any[]>([]);
   const [isAddingProduct, setIsAddingProduct] = useState(false);
   const [newProduct, setNewProduct] = useState({
-    name: "", price: "", category: "", description: "", image: ""
+    name: "",
+    price: "",
+    category: "",
+    description: "",
+    image: ""
   });
 
   useEffect(() => {
@@ -59,16 +63,21 @@ export default function VendorDashboard() {
   const handleAddProduct = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
+
     try {
       const token = localStorage.getItem("hastoria_token");
       const res = await fetch("/api/vendor/products", {
         method: "POST",
-        headers: {
+        headers: { 
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`
         },
-        body: JSON.stringify({ ...newProduct, price: parseFloat(newProduct.price) }),
+        body: JSON.stringify({
+          ...newProduct,
+          price: parseFloat(newProduct.price)
+        }),
       });
+
       if (res.ok) {
         setIsAddingProduct(false);
         setNewProduct({ name: "", price: "", category: "", description: "", image: "" });
@@ -103,6 +112,7 @@ export default function VendorDashboard() {
 
   return (
     <div className="flex min-h-screen bg-secondary/20">
+      {/* Sidebar */}
       <aside className="w-64 bg-white border-r border-border hidden lg:block p-6">
         <div className="flex items-center gap-3 mb-12">
           <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white">
@@ -123,6 +133,7 @@ export default function VendorDashboard() {
         </nav>
       </aside>
 
+      {/* Main Content */}
       <main className="flex-1 p-8">
         <div className="flex justify-between items-center mb-8">
           <div>
@@ -145,9 +156,9 @@ export default function VendorDashboard() {
               {products.map(product => (
                 <Card key={product.id} className="artisan-card overflow-hidden border-none">
                   <div className="aspect-video relative">
-                    <img
-                      src={product.images?.[0] || "https://picsum.photos/seed/product/400/500"}
-                      alt={product.name}
+                    <img 
+                      src={product.images?.[0] || "https://picsum.photos/seed/product/400/500"} 
+                      alt={product.name} 
                       className="w-full h-full object-cover"
                       referrerPolicy="no-referrer"
                     />
@@ -218,6 +229,7 @@ export default function VendorDashboard() {
         </Tabs>
       </main>
 
+      {/* Add Product Dialog (Simplified as a full-screen overlay for now) */}
       {isAddingProduct && (
         <div className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
           <Card className="w-full max-w-lg artisan-card border-none">
@@ -228,25 +240,52 @@ export default function VendorDashboard() {
               <form onSubmit={handleAddProduct} className="space-y-6">
                 <div className="space-y-2">
                   <Label htmlFor="name">Product Name</Label>
-                  <Input id="name" value={newProduct.name} onChange={e => setNewProduct({...newProduct, name: e.target.value})} placeholder="e.g. Hand-Painted Ceramic Vase" required />
+                  <Input 
+                    id="name" 
+                    value={newProduct.name} 
+                    onChange={e => setNewProduct({...newProduct, name: e.target.value})} 
+                    placeholder="e.g. Hand-Painted Ceramic Vase"
+                    required
+                  />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="price">Price (₹)</Label>
-                    <Input id="price" type="number" value={newProduct.price} onChange={e => setNewProduct({...newProduct, price: e.target.value})} required />
+                    <Input 
+                      id="price" 
+                      type="number"
+                      value={newProduct.price} 
+                      onChange={e => setNewProduct({...newProduct, price: e.target.value})} 
+                      required
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="category">Category</Label>
-                    <Input id="category" value={newProduct.category} onChange={e => setNewProduct({...newProduct, category: e.target.value})} placeholder="e.g. Pottery" required />
+                    <Input 
+                      id="category" 
+                      value={newProduct.category} 
+                      onChange={e => setNewProduct({...newProduct, category: e.target.value})} 
+                      placeholder="e.g. Pottery"
+                      required
+                    />
                   </div>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="image">Image URL</Label>
-                  <Input id="image" value={newProduct.image} onChange={e => setNewProduct({...newProduct, image: e.target.value})} placeholder="https://images.unsplash.com/..." />
+                  <Input 
+                    id="image" 
+                    value={newProduct.image} 
+                    onChange={e => setNewProduct({...newProduct, image: e.target.value})} 
+                    placeholder="https://images.unsplash.com/..."
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="desc">Description</Label>
-                  <Input id="desc" value={newProduct.description} onChange={e => setNewProduct({...newProduct, description: e.target.value})} />
+                  <Input 
+                    id="desc" 
+                    value={newProduct.description} 
+                    onChange={e => setNewProduct({...newProduct, description: e.target.value})} 
+                  />
                 </div>
                 <div className="flex gap-4 pt-4">
                   <Button type="button" variant="outline" className="flex-1 rounded-full" onClick={() => setIsAddingProduct(false)}>Cancel</Button>

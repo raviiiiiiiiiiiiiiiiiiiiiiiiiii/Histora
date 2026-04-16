@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
-import { Store, ShieldCheck, Zap, Globe, ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent } from "@/components/ui/card";
+import { Store, ShieldCheck, Zap, Globe, ArrowRight, CheckCircle2 } from "lucide-react";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
+import { Label } from "@/components/ui/Label";
+import { Card, CardContent } from "@/components/ui/Card";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function SellerRegistration() {
   const navigate = useNavigate();
-  const { user, updateProfile, register } = useAuth();
+  const { user, profile, updateProfile, register } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -20,16 +20,21 @@ export default function SellerRegistration() {
     artisanType: "",
     description: "",
   });
+
   const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Submitting seller registration...");
     setIsSubmitting(true);
     setError("");
     try {
       if (!user) {
+        console.log("Registering new user...");
         await register(formData.email, formData.password, formData.displayName);
+        console.log("Registration successful, updating profile...");
       }
+      
       await updateProfile({
         role: "vendor",
         shop_name: formData.shopName,
@@ -37,8 +42,10 @@ export default function SellerRegistration() {
         shop_description: formData.description,
         vendor_status: "active",
       });
+      console.log("Profile update successful, navigating to dashboard...");
       navigate("/dashboard");
     } catch (err: any) {
+      console.error("Error registering as seller", err);
       setError(err.message || "Something went wrong. Please try again.");
     } finally {
       setIsSubmitting(false);
@@ -50,7 +57,7 @@ export default function SellerRegistration() {
       <div className="container mx-auto px-4 max-w-6xl">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Left Side: Info */}
-          <motion.div
+          <motion.div 
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             className="space-y-8"
@@ -86,7 +93,7 @@ export default function SellerRegistration() {
           </motion.div>
 
           {/* Right Side: Form */}
-          <motion.div
+          <motion.div 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
@@ -104,9 +111,9 @@ export default function SellerRegistration() {
                     <>
                       <div className="space-y-2">
                         <Label className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Full Name</Label>
-                        <Input
+                        <Input 
                           required
-                          placeholder="John Doe"
+                          placeholder="John Doe" 
                           className="h-14 rounded-2xl bg-secondary/10 border-none px-6"
                           value={formData.displayName}
                           onChange={(e) => setFormData({...formData, displayName: e.target.value})}
@@ -114,10 +121,10 @@ export default function SellerRegistration() {
                       </div>
                       <div className="space-y-2">
                         <Label className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Email Address</Label>
-                        <Input
+                        <Input 
                           required
                           type="email"
-                          placeholder="vendor@example.com"
+                          placeholder="vendor@example.com" 
                           className="h-14 rounded-2xl bg-secondary/10 border-none px-6"
                           value={formData.email}
                           onChange={(e) => setFormData({...formData, email: e.target.value})}
@@ -125,10 +132,10 @@ export default function SellerRegistration() {
                       </div>
                       <div className="space-y-2">
                         <Label className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Password</Label>
-                        <Input
+                        <Input 
                           required
                           type="password"
-                          placeholder="••••••••"
+                          placeholder="••••••••" 
                           className="h-14 rounded-2xl bg-secondary/10 border-none px-6"
                           value={formData.password}
                           onChange={(e) => setFormData({...formData, password: e.target.value})}
@@ -138,9 +145,9 @@ export default function SellerRegistration() {
                   )}
                   <div className="space-y-2">
                     <Label className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Shop Name</Label>
-                    <Input
+                    <Input 
                       required
-                      placeholder="e.g. Jaipur Blue Pottery"
+                      placeholder="e.g. Jaipur Blue Pottery" 
                       className="h-14 rounded-2xl bg-secondary/10 border-none px-6"
                       value={formData.shopName}
                       onChange={(e) => setFormData({...formData, shopName: e.target.value})}
@@ -148,9 +155,9 @@ export default function SellerRegistration() {
                   </div>
                   <div className="space-y-2">
                     <Label className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Artisan Type</Label>
-                    <Input
+                    <Input 
                       required
-                      placeholder="e.g. Potter, Weaver, Painter"
+                      placeholder="e.g. Potter, Weaver, Painter" 
                       className="h-14 rounded-2xl bg-secondary/10 border-none px-6"
                       value={formData.artisanType}
                       onChange={(e) => setFormData({...formData, artisanType: e.target.value})}
@@ -158,7 +165,7 @@ export default function SellerRegistration() {
                   </div>
                   <div className="space-y-2">
                     <Label className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Shop Description</Label>
-                    <textarea
+                    <textarea 
                       required
                       className="w-full min-h-[120px] p-6 rounded-2xl bg-secondary/10 border-none focus:outline-none focus:ring-2 focus:ring-primary/20"
                       placeholder="Tell us about your craft and story..."
@@ -168,7 +175,7 @@ export default function SellerRegistration() {
                   </div>
 
                   <div className="pt-4">
-                    <Button
+                    <Button 
                       type="submit"
                       disabled={isSubmitting}
                       className="olive-button w-full h-16 text-xl shadow-xl group"

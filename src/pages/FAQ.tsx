@@ -1,5 +1,5 @@
 import React from "react";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/Accordion";
 import { motion } from "motion/react";
 
 const faqs = [
@@ -29,7 +29,7 @@ export default function FAQ() {
   return (
     <div className="min-h-screen bg-[#fdfcfb] pt-32 pb-24">
       <div className="container mx-auto px-4 max-w-3xl">
-        <motion.div
+        <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-16"
@@ -39,7 +39,7 @@ export default function FAQ() {
           <p className="text-muted-foreground text-lg">Everything you need to know about Hastoria and our artisan community.</p>
         </motion.div>
 
-        <motion.div
+        <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}

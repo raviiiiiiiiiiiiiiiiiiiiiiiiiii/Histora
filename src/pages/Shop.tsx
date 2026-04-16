@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { Search, Filter, SlidersHorizontal, ChevronRight, Star } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/Input";
+import { Button } from "@/components/ui/Button";
+import { Badge } from "@/components/ui/Badge";
 import { Link } from "react-router-dom";
 
 export default function Shop() {
@@ -59,6 +59,7 @@ export default function Shop() {
   return (
     <div className="min-h-screen bg-[#fdfcfb] pt-24 pb-24">
       <div className="container mx-auto px-4">
+        {/* Header */}
         <div className="text-center mb-16">
           <p className="text-primary font-medium uppercase tracking-widest text-sm mb-4">Curated Collection</p>
           <h1 className="text-5xl md:text-7xl font-heading font-bold mb-6">Shop Handmade</h1>
@@ -67,6 +68,7 @@ export default function Shop() {
           </p>
         </div>
 
+        {/* Filters & Search */}
         <div className="flex flex-col lg:flex-row gap-8 mb-16 items-center justify-between">
           <div className="relative w-full lg:max-w-md">
             <Input 
@@ -92,6 +94,7 @@ export default function Shop() {
           </div>
         </div>
 
+        {/* Product Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
           {filteredProducts.map((product, idx) => (
             <motion.div 

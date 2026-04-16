@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import { Badge } from "@/components/ui/Badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
 import { ShoppingBag, Package, MapPin, CreditCard, Edit2, Save, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
 import { useNavigate, Link } from "react-router-dom";
 
 export default function UserProfile() {
@@ -99,9 +99,9 @@ export default function UserProfile() {
                 <div className="flex-1">
                   <p className="text-xs text-muted-foreground uppercase font-bold tracking-tighter mb-1">Shipping Address</p>
                   {isEditingAddress ? (
-                    <Input
-                      value={address}
-                      onChange={(e) => setAddress(e.target.value)}
+                    <Input 
+                      value={address} 
+                      onChange={(e) => setAddress(e.target.value)} 
                       placeholder="Enter your full shipping address"
                       className="mt-2"
                     />
@@ -157,14 +157,16 @@ export default function UserProfile() {
                       <p className="text-sm text-muted-foreground">Qty: {order.quantity || 1} • Total: ₹{order.total} • <span className="text-primary font-bold">{order.payment_method || 'COD'}</span></p>
                     </div>
                   </div>
+
+                  {/* Shipping Progress */}
                   <div className="space-y-4">
                     <div className="flex justify-between text-sm font-medium">
                       <span>Shipping Progress</span>
                       <span className="text-primary">{order.shipping_progress || 0}%</span>
                     </div>
                     <div className="h-2 w-full bg-secondary/50 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-primary transition-all duration-1000"
+                      <div 
+                        className="h-full bg-primary transition-all duration-1000" 
                         style={{ width: `${order.shipping_progress || 0}%` }}
                       />
                     </div>
@@ -184,7 +186,7 @@ export default function UserProfile() {
                 <Package size={48} className="mx-auto text-muted-foreground/30 mb-4" />
                 <h3 className="text-2xl font-heading font-bold mb-2">No orders yet</h3>
                 <p className="text-muted-foreground mb-8">You haven't made any purchases yet. Explore our collection!</p>
-                <Button onClick={() => navigate("/shop")} className="olive-button">Start Shopping</Button>
+                <Button render={<Link to="/shop" />} className="olive-button">Start Shopping</Button>
               </div>
             )}
           </div>

@@ -1,12 +1,12 @@
 import { ShoppingCart, User, Search, Menu, Store, LayoutDashboard, LogOut } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/Sheet";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/DropdownMenu";
 
 export default function Navbar() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -97,7 +97,7 @@ export default function Navbar() {
             <SheetContent side="right" className="w-full sm:w-[400px] p-0 border-none">
               <div className="flex flex-col h-full bg-[#fdfcfb]">
                 <div className="p-6 border-b border-border/50 flex justify-between items-center">
-                                    <Link to="/" className="text-2xl font-heading font-bold tracking-tight">Hastoria</Link>
+                  <Link to="/" className="text-2xl font-heading font-bold tracking-tight">Hastoria</Link>
                 </div>
                 <div className="flex-1 px-6 py-8 space-y-6">
                   <Link to="/shop" className="block text-3xl font-heading font-bold hover:text-primary transition-colors">Shop Handmade</Link>
@@ -105,6 +105,7 @@ export default function Navbar() {
                   <Link to="/about" className="block text-3xl font-heading font-bold hover:text-primary transition-colors">Our Story</Link>
                   <Link to="/faq" className="block text-3xl font-heading font-bold hover:text-primary transition-colors">FAQs</Link>
                   <Link to="/contact" className="block text-3xl font-heading font-bold hover:text-primary transition-colors">Contact</Link>
+                  
                   {user && (
                     <div className="pt-6 border-t border-border/50 space-y-6">
                       <Link to="/profile" className="block text-2xl font-heading font-bold text-muted-foreground hover:text-primary transition-colors">My Profile</Link>
@@ -124,11 +125,13 @@ export default function Navbar() {
           </Sheet>
         </div>
       </div>
+      
+      {/* Mobile Search Bar (Expandable) */}
       {isSearchOpen && (
         <div className="md:hidden p-4 border-t border-border/50 animate-in slide-in-from-top duration-300">
           <div className="relative">
-            <Input
-              placeholder="Search handmade treasures..."
+            <Input 
+              placeholder="Search handmade treasures..." 
               className="pl-10 rounded-full bg-secondary/50 border-none"
               autoFocus
             />
@@ -139,4 +142,3 @@ export default function Navbar() {
     </nav>
   );
 }
-
